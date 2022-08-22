@@ -1,5 +1,5 @@
-#ifndef HASH_H
-#define HASH_H
+#ifndef HASH_HPP
+#define HASH_HPP
 
 #include <stdbool.h>
 #include <fstream>
@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+
+using namespace std;
 
 typedef struct Item Item;
 typedef struct Block Block;
@@ -24,21 +26,21 @@ struct Block
     Block *prox;
 };
 
-struct Lista
+struct Hash
 {
     Block *first;
     Block *last;
 };
 
-void FLVazia(Lista *l);
-void LInsert(Lista *l, Item d);
-void LRemove(Lista *l, Item d);
+void EscritaArquivo();
+void ManipulaArquivo(int matrix_size);
+void FHVazia(Hash *l);
+void HInsert(Hash *l, Item d);
+void HRemove(Hash *l, Item d);
 void Swap(Block *a, Block *b);
-void LImprime(Lista *l, int size);
+void HImprime(Hash *l, int size);
 int FoldSize(int vector_size);
-int LinearHashing(int vector_size, int hash_size, int *input_vector);
-int DoubleHashing(int vector_size, int hash_size, int *input_vector);
+void LinearHashing(int vector_size, int hash_size, int *input_vector);
 int KeyCalculate1(int hash_value, int hash_size);
-int KeyCalculate2(int hash_value, int hash_size, int key);
 
 #endif

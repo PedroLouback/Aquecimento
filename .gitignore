@@ -1,0 +1,4 @@
+.vscode/settings.json
+build/app
+build/objects/src/main.o
+build/objects/src/hash.o

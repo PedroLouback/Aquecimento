@@ -45,7 +45,7 @@ void EscritaArquivo()
 void ManipulaArquivo(int matrix_size)
 {
 
-    string numbers;
+    string line, *numbers;
     int linha1 = 0, coluna1 = 0, linha2 = 0, coluna2 = 0;
     ifstream file;
 
@@ -57,15 +57,25 @@ void ManipulaArquivo(int matrix_size)
     cin >> coluna1;
     cout << "\nInforme o 'i' do 2º ponto: ";
     cin >> linha2;
-    cout << "\nInforme o 'j' do 2º ponto: ";
+    cout << "\nInforme o 'j' do 2º ponto: " << endl;
     cin >> coluna2;
+
+    if(linha1 >= matrix_size || linha2 >= matrix_size){
+        cout << "\nERRO: Linha inserida não existente!" << endl;
+        exit(1);
+    }
+
+    numbers = (string*) malloc(matrix_size*sizeof(string));
 
     for (int i = 0; i < matrix_size; i++)
     {
-        getline(file, numbers);
-        if (i == linha1)
+        getline(file, line);
+        if (i >= linha1)
         {
-            cout << numbers << endl;
+            if(i <= linha2){
+                cout << line << endl;
+            }
+            
         }
     }
 
