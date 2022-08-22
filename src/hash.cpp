@@ -45,41 +45,82 @@ void EscritaArquivo()
 void ManipulaArquivo(int matrix_size)
 {
 
-    string line, *numbers;
-    int linha1 = 0, coluna1 = 0, linha2 = 0, coluna2 = 0;
+    string line, **matrix;
+    int linha1 = 0, coluna1 = 0, linha2 = 0, coluna2 = 0, size = 0, cont=0;
     ifstream file;
 
     file.open("matriz.txt");
 
     cout << "\nInforme o 'i' do 1º ponto: ";
     cin >> linha1;
-    cout << "\nInforme o 'j' do 1º ponto: ";
+    cout << "Informe o 'j' do 1º ponto: ";
     cin >> coluna1;
     cout << "\nInforme o 'i' do 2º ponto: ";
     cin >> linha2;
-    cout << "\nInforme o 'j' do 2º ponto: " << endl;
+    cout << "Informe o 'j' do 2º ponto: ";
     cin >> coluna2;
 
-    if(linha1 >= matrix_size || linha2 >= matrix_size){
+    cout << "\n";
+
+    if (linha1 >= matrix_size || linha2 >= matrix_size)
+    {
         cout << "\nERRO: Linha inserida não existente!" << endl;
         exit(1);
     }
 
-    numbers = (string*) malloc(matrix_size*sizeof(string));
+    //Calculo para descobrir o tamanho da matriz secundaria
+    size = ((linha2 - (linha1 - 1)) * (coluna2 - (coluna1 - 1)));
+
+    //Aloca a memoria para inserir a matriz
+    matrix = (string **)malloc(sizeof(string *) * size);
+    for (int i = 0; i < size; i++)
+    {
+        matrix[i] = (string *)malloc(sizeof(string) * size);
+    }
 
     for (int i = 0; i < matrix_size; i++)
     {
         getline(file, line);
         if (i >= linha1)
         {
-            if(i <= linha2){
-                cout << line << endl;
+            if (i <= linha2)
+            {
+                vector<string> tokens;
+
+                istringstream iss(line);
+                string number;
+                while (iss >> number)
+                {
+                    tokens.push_back(number);
+                }
+                for (int i = 0; i < matrix_size; i++){
+                    for(int j = 0; j < matrix_size; j++){
+                        if (cont <= (coluna2 - coluna1))
+                        {
+                            matrix[i][j] = tokens[coluna1 + cont];
+                            cont++;
+                        }
+                    }
+                }
             }
-            
         }
     }
 
+    PrintMatrix(size, matrix);
+
     file.close();
+}
+
+void PrintMatrix(int size, string **matrix){
+    for (int i = 0; i < size; i++)
+    {
+        cout << "\n";
+        for (int j = 0; j < size; j++)
+        {
+            cout << matrix[i][j] << "\t";
+        }
+    }
+    cout << "\n\n";
 }
 
 void FHVazia(Hash *l)

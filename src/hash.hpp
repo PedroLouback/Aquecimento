@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <regex>
 
 using namespace std;
 
@@ -34,7 +35,8 @@ struct Hash
 
 void EscritaArquivo();
 void ManipulaArquivo(int matrix_size);
-void FHVazia(Hash *l);
+void PrintMatrix(int size, string **matrix);
+ void FHVazia(Hash *l);
 void HInsert(Hash *l, Item d);
 void HRemove(Hash *l, Item d);
 void Swap(Block *a, Block *b);
