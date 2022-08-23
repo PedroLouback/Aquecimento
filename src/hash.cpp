@@ -46,7 +46,7 @@ void ManipulaArquivo(int matrix_size)
 {
 
     string line, **matrix;
-    int linha1 = 0, coluna1 = 0, linha2 = 0, coluna2 = 0, size = 0, cont=0;
+    int linha1 = 0, coluna1 = 0, linha2 = 0, coluna2 = 0, size = 0, cont = 0, linha = 0, coluna = 0;
     ifstream file;
 
     file.open("matriz.txt");
@@ -60,18 +60,16 @@ void ManipulaArquivo(int matrix_size)
     cout << "Informe o 'j' do 2º ponto: ";
     cin >> coluna2;
 
-    cout << "\n";
-
     if (linha1 >= matrix_size || linha2 >= matrix_size)
     {
-        cout << "\nERRO: Linha inserida não existente!" << endl;
+        cout << "\nERRO: Linha ou coluna inserida não existente!" << endl;
         exit(1);
     }
 
-    //Calculo para descobrir o tamanho da matriz secundaria
+    // Calculo para descobrir o tamanho da matriz secundaria
     size = ((linha2 - (linha1 - 1)) * (coluna2 - (coluna1 - 1)));
 
-    //Aloca a memoria para inserir a matriz
+    // Aloca a memoria para inserir a matriz
     matrix = (string **)malloc(sizeof(string *) * size);
     for (int i = 0; i < size; i++)
     {
@@ -86,36 +84,39 @@ void ManipulaArquivo(int matrix_size)
             if (i <= linha2)
             {
                 vector<string> tokens;
-
                 istringstream iss(line);
                 string number;
                 while (iss >> number)
                 {
                     tokens.push_back(number);
                 }
-                for (int i = 0; i < matrix_size; i++){
-                    for(int j = 0; j < matrix_size; j++){
-                        if (cont <= (coluna2 - coluna1))
-                        {
-                            matrix[i][j] = tokens[coluna1 + cont];
-                            cont++;
-                        }
+                cont = 0;
+                for (coluna = 0; coluna < (linha2 - linha1); coluna++)
+                {
+                    if (cont <= (coluna2 - coluna1))
+                    {
+                        matrix[linha][coluna] = tokens[coluna1 + cont];
+                        cont++;
                     }
                 }
+                linha++;
             }
         }
     }
-
-    PrintMatrix(size, matrix);
-
     file.close();
+
+    linha = (linha2 - linha1);
+    coluna = (coluna2 - coluna1);
+
+    PrintMatrix(linha, coluna, matrix);
 }
 
-void PrintMatrix(int size, string **matrix){
-    for (int i = 0; i < size; i++)
+void PrintMatrix(int linha, int coluna, string **matrix)
+{
+    for (int i = 0; i < coluna; i++)
     {
         cout << "\n";
-        for (int j = 0; j < size; j++)
+        for (int j = 0; j < linha; j++)
         {
             cout << matrix[i][j] << "\t";
         }

@@ -35,8 +35,8 @@ struct Hash
 
 void EscritaArquivo();
 void ManipulaArquivo(int matrix_size);
-void PrintMatrix(int size, string **matrix);
- void FHVazia(Hash *l);
+void PrintMatrix(int linha, int coluna, string **matrix);
+void FHVazia(Hash *l);
 void HInsert(Hash *l, Item d);
 void HRemove(Hash *l, Item d);
 void Swap(Block *a, Block *b);
