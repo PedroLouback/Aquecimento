@@ -1,3 +1,4 @@
+
 #include "hash.hpp"
 
 void Swap(Block *a, Block *b)
@@ -8,18 +9,18 @@ void Swap(Block *a, Block *b)
     b->data = aux;
 }
 
-void EscritaArquivo()
+int EscritaArquivo()
 {
 
     int matrix_size = 0, value = 0;
-    ofstream file;
+    ofstream matrixfile;
 
     cout << "\nInforme quantas linhas e colunas vai compor a matriz principal: ";
     cin >> matrix_size;
 
-    file.open("matriz.txt");
+    matrixfile.open("matrix.txt");
 
-    if (!file)
+    if (!matrixfile)
     {
         cout << "Arquivo não pode ser aberto" << endl;
         abort();
@@ -30,36 +31,77 @@ void EscritaArquivo()
         for (int j = 0; j < matrix_size; j++)
         {
             value = (rand() % 100);
-            file << value << "\t";
+            matrixfile << value << "\t";
         }
-        file << "\n";
+        matrixfile << "\n";
     }
 
     cout << "\nUm arquivo contendo uma matriz " << matrix_size << " x " << matrix_size << " foi criado" << endl;
 
-    file.close();
+    matrixfile.close();
 
-    ManipulaArquivo(matrix_size);
+    return matrix_size;
+}
+
+vector<int> Tokenizer(const string &str, char sep)
+{
+    vector<int> tokens;
+
+    int i;
+    stringstream ss(str);
+    while (ss >> i)
+    {
+        tokens.push_back(i);
+        if (ss.peek() == sep)
+        {
+            ss.ignore();
+        }
+    }
+
+    return tokens;
+}
+
+vector <int> CoordinateRead(){
+
+    ifstream coordinatesfile;
+    string coordinateline;
+    char sep = ',';
+    coordinatesfile.open("coordinates.txt");
+    getline(coordinatesfile, coordinateline);
+
+    vector<int> Coordinates = Tokenizer(coordinateline, sep);
+
+    return Coordinates;
 }
 
 void ManipulaArquivo(int matrix_size)
 {
 
     string line, **matrix;
+    int **matrix_int, **transp_matrix;
     int linha1 = 0, coluna1 = 0, linha2 = 0, coluna2 = 0, size = 0, cont = 0, linha = 0, coluna = 0;
-    ifstream file;
+    ifstream matrixfile;
 
-    file.open("matriz.txt");
+    CoordinateRead();
 
-    cout << "\nInforme o 'i' do 1º ponto: ";
-    cin >> linha1;
-    cout << "Informe o 'j' do 1º ponto: ";
-    cin >> coluna1;
-    cout << "\nInforme o 'i' do 2º ponto: ";
-    cin >> linha2;
-    cout << "Informe o 'j' do 2º ponto: ";
-    cin >> coluna2;
-
+    for(size_t i = 0; i < CoordinateRead().size(); i++){
+        if(i == 0){
+            linha1 = CoordinateRead()[i];
+        }
+        if(i == 1){
+            coluna1 = CoordinateRead()[i];
+        }
+        if (i == 2)
+        {
+            linha2 = CoordinateRead()[i];
+        }
+        if (i == 3)
+        {
+            coluna2 = CoordinateRead()[i];
+        }
+    }
+    
+    matrixfile.open("matrix.txt");
     if (linha1 >= matrix_size || linha2 >= matrix_size)
     {
         cout << "\nERRO: Linha ou coluna inserida não existente!" << endl;
@@ -76,9 +118,21 @@ void ManipulaArquivo(int matrix_size)
         matrix[i] = (string *)malloc(sizeof(string) * size);
     }
 
+    matrix_int = (int **)malloc(sizeof(int *) * size);
+    for (int i = 0; i < size; i++)
+    {
+        matrix_int[i] = (int *)malloc(sizeof(int) * size);
+    }
+
+    transp_matrix = (int **)malloc(sizeof(int *) * size);
+    for (int i = 0; i < size; i++)
+    {
+        transp_matrix[i] = (int *)malloc(sizeof(int) * size);
+    }
+
     for (int i = 0; i < matrix_size; i++)
     {
-        getline(file, line);
+        getline(matrixfile, line);
         if (i >= linha1)
         {
             if (i <= linha2)
@@ -103,16 +157,36 @@ void ManipulaArquivo(int matrix_size)
             }
         }
     }
-    file.close();
+    matrixfile.close();
 
     linha = (linha2 - linha1);
     coluna = (coluna2 - coluna1);
 
-    PrintMatrix(linha, coluna, matrix);
+    for (int i = 0; i < coluna; i++)
+    {
+        for (int j = 0; j < linha; j++)
+        {
+            matrix_int[i][j] = stoi(matrix[i][j]);
+        }
+    }
+
+    cout << "\nMatriz recortada do ponto (" << linha1 << "," << coluna1 << ") ao (" << linha2 << "," << coluna2 << "):";
+    PrintMatrix(linha, coluna, matrix_int);
+
+    for (int i = 0; i < coluna; i++)
+    {
+        for (int j = 0; j < linha; j++)
+        {
+            transp_matrix[i][j] = matrix_int[j][i];
+        }
+    }
+
+    PrintMatrix(linha, coluna, transp_matrix);
 }
 
-void PrintMatrix(int linha, int coluna, string **matrix)
+void PrintMatrix(int linha, int coluna, int **matrix)
 {
+
     for (int i = 0; i < coluna; i++)
     {
         cout << "\n";

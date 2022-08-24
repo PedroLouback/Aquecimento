@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <regex>
+#include <sstream>
 
 using namespace std;
 
@@ -33,9 +33,11 @@ struct Hash
     Block *last;
 };
 
-void EscritaArquivo();
+int EscritaArquivo();
+vector<int> Tokenizer(const string &str, char sep);
+vector<int> CoordinateRead();
 void ManipulaArquivo(int matrix_size);
-void PrintMatrix(int linha, int coluna, string **matrix);
+void PrintMatrix(int linha, int coluna, int **matrix);
 void FHVazia(Hash *l);
 void HInsert(Hash *l, Item d);
 void HRemove(Hash *l, Item d);

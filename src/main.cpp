@@ -4,7 +4,7 @@ int main()
 {
     // int hash_size = 0, vector_size = 0, *input_vector;
 
-    EscritaArquivo();
+    ManipulaArquivo(EscritaArquivo());
 
     // printf("\nInforme a quantidade de valores que deseja inserir no vetor de entradas: ");
     // scanf("%d", &vector_size);
