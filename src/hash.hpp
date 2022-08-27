@@ -17,8 +17,8 @@ typedef struct Lista Lista;
 
 struct Item
 {
-    int val;
-    int key;
+    int** matrix;
+    vector<int> key;
 };
 
 struct Block
@@ -40,11 +40,8 @@ void ManipulaArquivo(int matrix_size);
 void PrintMatrix(int linha, int coluna, int **matrix);
 void FHVazia(Hash *l);
 void HInsert(Hash *l, Item d);
-void HRemove(Hash *l, Item d);
 void Swap(Block *a, Block *b);
-void HImprime(Hash *l, int size);
 int FoldSize(int vector_size);
-void LinearHashing(int vector_size, int hash_size, int *input_vector);
-int KeyCalculate1(int hash_value, int hash_size);
+void LinearHashing(int hash_size, int **matrix, int line, int column, vector<int> Coordinates);
 
 #endif

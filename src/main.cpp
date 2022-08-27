@@ -22,5 +22,7 @@ int main()
 
     // LinearHashing(vector_size, hash_size, input_vector);
 
+    ManipulaArquivo(EscritaArquivo());
+
     return 0;
 }
