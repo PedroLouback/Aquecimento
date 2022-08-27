@@ -61,15 +61,18 @@ vector<int> Tokenizer(const string &str, char sep)
     return tokens;
 }
 
-vector <int> CoordinateRead(){
+vector<int> CoordinateRead()
+{
 
     ifstream coordinatesfile;
     string coordinateline;
     char sep = ',';
-    coordinatesfile.open("coordinates.txt");
+    coordinatesfile.open("coordenadas.txt");
     getline(coordinatesfile, coordinateline);
 
     vector<int> Coordinates = Tokenizer(coordinateline, sep);
+
+    coordinatesfile.close();
 
     return Coordinates;
 }
@@ -78,17 +81,20 @@ void ManipulaArquivo(int matrix_size)
 {
 
     string line, **matrix;
-    int **matrix_int, **transp_matrix;
-    int linha1 = 0, coluna1 = 0, linha2 = 0, coluna2 = 0, size = 0, cont = 0, linha = 0, coluna = 0;
+    int **matrix_int, **transp_matrix, **mult_matrix;
+    int linha1 = 0, coluna1 = 0, linha2 = 0, coluna2 = 0, matrixline = 0, matrixcolumn = 0, cont = 0, linha = 0, size = 0;
     ifstream matrixfile;
 
     CoordinateRead();
 
-    for(size_t i = 0; i < CoordinateRead().size(); i++){
-        if(i == 0){
+    for (size_t i = 0; i < CoordinateRead().size(); i++)
+    {
+        if (i == 0)
+        {
             linha1 = CoordinateRead()[i];
         }
-        if(i == 1){
+        if (i == 1)
+        {
             coluna1 = CoordinateRead()[i];
         }
         if (i == 2)
@@ -100,7 +106,7 @@ void ManipulaArquivo(int matrix_size)
             coluna2 = CoordinateRead()[i];
         }
     }
-    
+
     matrixfile.open("matrix.txt");
     if (linha1 >= matrix_size || linha2 >= matrix_size)
     {
@@ -109,25 +115,16 @@ void ManipulaArquivo(int matrix_size)
     }
 
     // Calculo para descobrir o tamanho da matriz secundaria
-    size = ((linha2 - (linha1 - 1)) * (coluna2 - (coluna1 - 1)));
+    matrixline = ((linha2 - (linha1)));
+    matrixcolumn = (coluna2 - (coluna1));
+    matrixline++;
+    matrixcolumn++;
 
-    // Aloca a memoria para inserir a matriz
-    matrix = (string **)malloc(sizeof(string *) * size);
-    for (int i = 0; i < size; i++)
+    // Aloca a memoria para inserir a matriz de string
+    matrix = (string **)malloc(sizeof(string *) * matrixline);
+    for (int i = 0; i < matrixline; i++)
     {
-        matrix[i] = (string *)malloc(sizeof(string) * size);
-    }
-
-    matrix_int = (int **)malloc(sizeof(int *) * size);
-    for (int i = 0; i < size; i++)
-    {
-        matrix_int[i] = (int *)malloc(sizeof(int) * size);
-    }
-
-    transp_matrix = (int **)malloc(sizeof(int *) * size);
-    for (int i = 0; i < size; i++)
-    {
-        transp_matrix[i] = (int *)malloc(sizeof(int) * size);
+        matrix[i] = (string *)malloc(sizeof(string) * matrixcolumn);
     }
 
     for (int i = 0; i < matrix_size; i++)
@@ -145,11 +142,11 @@ void ManipulaArquivo(int matrix_size)
                     tokens.push_back(number);
                 }
                 cont = 0;
-                for (coluna = 0; coluna < (linha2 - linha1); coluna++)
+                for (int j = 0; j < matrixcolumn; j++)
                 {
-                    if (cont <= (coluna2 - coluna1))
+                    if (cont <= matrixcolumn)
                     {
-                        matrix[linha][coluna] = tokens[coluna1 + cont];
+                        matrix[linha][j] = tokens[coluna1 + cont];
                         cont++;
                     }
                 }
@@ -159,38 +156,82 @@ void ManipulaArquivo(int matrix_size)
     }
     matrixfile.close();
 
-    linha = (linha2 - linha1);
-    coluna = (coluna2 - coluna1);
+    // Faz uma nova matriz só que de inteiro pois até aqui se trata de uma matriz de string
 
-    for (int i = 0; i < coluna; i++)
+    // Aloca a matriz de inteiro
+    matrix_int = (int **)malloc(sizeof(int *) * matrixline);
+    for (int i = 0; i < matrixline; i++)
     {
-        for (int j = 0; j < linha; j++)
+        matrix_int[i] = (int *)malloc(sizeof(int) * matrixcolumn);
+    }
+
+    for (int i = 0; i < matrixline; i++)
+    {
+        for (int j = 0; j < matrixcolumn; j++)
         {
             matrix_int[i][j] = stoi(matrix[i][j]);
         }
     }
 
     cout << "\nMatriz recortada do ponto (" << linha1 << "," << coluna1 << ") ao (" << linha2 << "," << coluna2 << "):";
-    PrintMatrix(linha, coluna, matrix_int);
+    PrintMatrix(matrixline, matrixcolumn, matrix_int);
 
-    for (int i = 0; i < coluna; i++)
+    // Pega a matriz normal e passa para a transposta
+
+    // Aloca a matriz transposta
+    transp_matrix = (int **)malloc(sizeof(int *) * matrixcolumn);
+    for (int i = 0; i < matrixcolumn; i++)
     {
-        for (int j = 0; j < linha; j++)
+        transp_matrix[i] = (int *)malloc(sizeof(int) * matrixline);
+    }
+
+    for (int i = 0; i < matrixcolumn; i++)
+    {
+        for (int j = 0; j < matrixline; j++)
         {
             transp_matrix[i][j] = matrix_int[j][i];
         }
     }
 
-    PrintMatrix(linha, coluna, transp_matrix);
+    cout << "\nA matriz transposta é:";
+    PrintMatrix(matrixcolumn, matrixline, transp_matrix);
+
+    // Faz a multiplicação de matriz
+
+    size = (matrixline * matrixcolumn);
+
+    // Aloca a matriz que vai receber o resultado da multiplicação
+    mult_matrix = (int **)malloc(sizeof(int *) * size);
+    for (int i = 0; i < size; i++)
+    {
+        mult_matrix[i] = (int *)malloc(sizeof(int) * size);
+    }
+
+    for (int i = 0; i < matrixline; i++)
+    {
+        for (int k = 0; k < matrixline; k++)
+        {
+            mult_matrix[i][k] = 0;
+            for (int j = 0; j < matrixcolumn; j++)
+            {
+                mult_matrix[i][k] += matrix_int[i][j] * transp_matrix[j][k];
+            }
+        }
+    }
+
+    cout << "\nA multiplicação de matriz resultou em:";
+    PrintMatrix(matrixline, matrixline, mult_matrix);
+
+    LinearHashing();
 }
 
-void PrintMatrix(int linha, int coluna, int **matrix)
+void PrintMatrix(int matrixline, int matrixcolumn, int **matrix)
 {
 
-    for (int i = 0; i < coluna; i++)
+    for (int i = 0; i < matrixline; i++)
     {
         cout << "\n";
-        for (int j = 0; j < linha; j++)
+        for (int j = 0; j < matrixcolumn; j++)
         {
             cout << matrix[i][j] << "\t";
         }
@@ -211,42 +252,6 @@ void HInsert(Hash *l, Item d)
     l->last = l->last->prox;
     l->last->data = d;
     l->last->prox = NULL;
-}
-
-void HRemove(Hash *l, Item d)
-{
-    Block *aux, *tmp;
-
-    if (l->first == l->last || l == NULL || l->first->prox == NULL)
-    {
-        printf("Hash VAZIA!\n");
-        return;
-    }
-
-    aux = l->first;
-    while (aux->prox != NULL)
-    {
-        if (aux->prox->data.val == d.val)
-        {
-            tmp = aux;
-            aux = aux->prox;
-            tmp->prox = aux->prox;
-            if (aux == l->last)
-                l->last = tmp;
-            free(aux);
-            aux->prox = NULL;
-        }
-        else
-            aux = aux->prox;
-    }
-}
-
-void HImprime(Hash *l, int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        printf("Chave:%d - Valor: %d\n", l[i].first->data.key, l[i].first->data.val);
-    }
 }
 
 // Faz com que o tamanho da hash passado dobre e seja o número primo proximo desse dobro
@@ -279,7 +284,7 @@ int FoldSize(int vector_size)
     }
 }
 
-void LinearHashing(int vector_size, int hash_size, int *input_vector)
+void LinearHashing(int hash_size, int **matrix, int line, int column, vector<int> Coordinates)
 {
     Hash LinearHashing[hash_size];
     Item aux;
@@ -291,30 +296,20 @@ void LinearHashing(int vector_size, int hash_size, int *input_vector)
         FHVazia(&LinearHashing[i]);
     }
 
-    for (i = 0; i < vector_size; i++)
+    aux.matrix = (int **)malloc(sizeof(int *) * line);
+    for (int i = 0; i < line; i++)
     {
-        aux.val = input_vector[i];
-        key = KeyCalculate1(aux.val, hash_size); // primeiro calcula a chave com mod, depois verifica se tem valor dentro dela e ai insere
-        aux.key = key;
-        if (LinearHashing[key].first == LinearHashing[key].last)
+        aux.matrix[i] = (int *)malloc(sizeof(int) * column);
+    }
+
+    for (int j = 0; i < line; i++)
+    {
+        for (int k = 0; j < column; j++)
         {
-            /*verifica se vai haver colisão, se houver vai inserir mais uma posição da hash e somar um no contador de colisão */
-            HInsert(&LinearHashing[key], aux);
-        }
-        else
-        {
-            HInsert(&LinearHashing[key], aux);
+            aux.matrix[j][k] = matrix[j][k];
         }
     }
-}
 
-// Vai achar a chave atraves da função mod
-int KeyCalculate1(int hash_value, int hash_size)
-{
+    for()
 
-    int key = 0;
-
-    key = hash_value % (hash_size);
-
-    return key;
 }
