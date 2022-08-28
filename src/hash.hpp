@@ -11,26 +11,19 @@
 
 using namespace std;
 
-typedef struct Item Item;
-typedef struct Block Block;
-typedef struct Lista Lista;
+typedef struct DataTable DataTable;
+typedef struct HashTable HashTable;
 
-struct Item
+struct DataTable
 {
+    int *key;
     int** matrix;
-    vector<int> key;
 };
 
-struct Block
+struct HashTable
 {
-    Item data;
-    Block *prox;
-};
-
-struct Hash
-{
-    Block *first;
-    Block *last;
+    DataTable *table;
+    int M;
 };
 
 int EscritaArquivo();
@@ -38,7 +31,7 @@ vector<int> Tokenizer(const string &str, char sep);
 vector<int> CoordinateRead();
 void ManipulaArquivo(int matrix_size);
 void PrintMatrix(int linha, int coluna, int **matrix);
-void FHVazia(Hash *l);
-void HInsert(Hash *l, Item d);
+void Initialize(HashTable *h, int M);
+void Insert(HashTable *h, int *key, int **matrix, int hash, int matrixline, int matrixcolumn);
 
 #endif
