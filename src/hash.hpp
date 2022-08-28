@@ -40,8 +40,5 @@ void ManipulaArquivo(int matrix_size);
 void PrintMatrix(int linha, int coluna, int **matrix);
 void FHVazia(Hash *l);
 void HInsert(Hash *l, Item d);
-void Swap(Block *a, Block *b);
-int FoldSize(int vector_size);
-void LinearHashing(int hash_size, int **matrix, int line, int column, vector<int> Coordinates);
 
 #endif
