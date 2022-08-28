@@ -5,6 +5,5 @@ int main()
 
     ManipulaArquivo(EscritaArquivo());
 
-
     return 0;
 }

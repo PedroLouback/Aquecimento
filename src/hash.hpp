@@ -17,7 +17,7 @@ typedef struct HashTable HashTable;
 struct DataTable
 {
     int *key;
-    int** matrix;
+    int **matrix;
 };
 
 struct HashTable

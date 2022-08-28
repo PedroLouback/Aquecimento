@@ -92,7 +92,7 @@ void ManipulaArquivo(int matrix_size)
 
     while (option != 'N' || option != 'n')
     {
-        //iniciliza o vetor da key
+        // iniciliza o vetor da key
         key = (int *)calloc(4, sizeof(int));
 
         if (cont3 == 0)
@@ -158,7 +158,7 @@ void ManipulaArquivo(int matrix_size)
                 matrixcolumn = (coluna2 - (coluna1));
                 matrixline++;
                 matrixcolumn++;
-                
+
                 // Faz a verificação se as coordenadas são iguais
                 for (int i = 0; i < h.M; i++)
                 {
@@ -174,10 +174,11 @@ void ManipulaArquivo(int matrix_size)
                                 return;
                             }
                         }
-                        
                     }
                 }
-            }else{
+            }
+            else
+            {
                 cout << "\nPrograma encerrado!" << endl;
                 return;
             }
@@ -229,7 +230,8 @@ void ManipulaArquivo(int matrix_size)
                         }
                     }
                     linha++;
-                    if (linha == matrixline){
+                    if (linha == matrixline)
+                    {
                         i = matrix_size;
                     }
                 }
@@ -245,7 +247,6 @@ void ManipulaArquivo(int matrix_size)
         {
             matrix_int[i] = (int *)malloc(sizeof(int) * matrixcolumn);
         }
-
 
         for (int i = 0; i < matrixline; i++)
         {
@@ -330,7 +331,7 @@ void PrintMatrix(int matrixline, int matrixcolumn, int **matrix)
 
 void Initialize(HashTable *h, int M)
 {
-    h->table = (DataTable *)malloc(M * sizeof(DataTable));    
+    h->table = (DataTable *)malloc(M * sizeof(DataTable));
 
     for (int i = 0; i < M; i++)
     {
